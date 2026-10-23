@@ -2,6 +2,12 @@
 # Runs inside the vercel-php runtime after `composer install` (composer "vercel" script).
 set -e
 
+# vercel-php runs `composer install --no-scripts`, so do what Laravel's
+# post-autoload-dump hook would. The function's file system is read-only,
+# so these caches can't be written at runtime.
+echo "Discovering Laravel packages..."
+php artisan package:discover --ansi
+
 echo "Building theme assets..."
 npm ci --no-audit --no-fund
 npm run build

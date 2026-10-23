@@ -9,7 +9,7 @@
             "runtime": "vercel-php@0.7.4",
             "memory": 1024,
             "maxDuration": 60,
-            "excludeFiles": "{node_modules/**,tests/**,.github/**,vendor/**/tests/**,vendor/**/Tests/**,vendor/**/docs/**,vendor/**/.github/**}"
+            "excludeFiles": "{.vercel/**,node_modules/**,tests/**,.github/**,vendor/**/tests/**,vendor/**/Tests/**,vendor/**/docs/**,vendor/**/.github/**}"
         }
     },
     "routes": [
