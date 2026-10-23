@@ -1,0 +1,24 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "framework": null,
+    "installCommand": "echo 'PHP dependencies and theme assets are built by the vercel-php runtime (composer \"vercel\" script)'",
+    "buildCommand": "echo 'Static files are served from public/'",
+    "outputDirectory": "public",
+    "functions": {
+        "api/*.php": {
+            "runtime": "vercel-php@0.7.4",
+            "memory": 1024,
+            "maxDuration": 60,
+            "excludeFiles": "{node_modules/**,tests/**,.github/**,vendor/**/tests/**,vendor/**/Tests/**,vendor/**/docs/**,vendor/**/.github/**}"
+        }
+    },
+    "routes": [
+        { "src": "/default/(.*)", "dest": "/api/assets.php?path=$1" },
+        { "src": "/(.*)\\.php", "dest": "/api/index.php" },
+        { "handle": "filesystem" },
+        { "src": "/(.*)", "dest": "/api/index.php" }
+    ],
+    "crons": [
+        { "path": "/api/cron.php?daily=1", "schedule": "0 0 * * *" }
+    ]
+}

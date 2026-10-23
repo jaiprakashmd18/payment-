@@ -1,0 +1,9 @@
+/vendor
+/node_modules
+/public/default
+/public/hot
+/public/storage
+/storage/logs/*.log
+.env
+.env.*
+!.env.example
