@@ -14,6 +14,7 @@
     },
     "routes": [
         { "src": "/default/(.*)", "dest": "/api/assets.php?path=$1" },
+        { "src": "/api/cron\\.php", "dest": "/api/cron.php" },
         { "src": "/(.*)\\.php", "dest": "/api/index.php" },
         { "handle": "filesystem" },
         { "src": "/(.*)", "dest": "/api/index.php" }
