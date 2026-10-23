@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Admin\Resources\GatewayResource\Pages;
+
+use App\Admin\Resources\GatewayResource;
+use App\Helpers\ExtensionHelper;
+use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+
+class CreateGateway extends CreateRecord
+{
+    protected static string $resource = GatewayResource::class;
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['type'] = 'gateway';
+
+        return $data;
+    }
+
+    protected function handleRecordCreation(array $data): Model
+    {
+        $data['enabled'] = true;
+        $record = static::getModel()::create(Arr::except($data, ['settings']));
+
+        $config = ExtensionHelper::getConfig($record->type, $record->extension);
+
+        foreach ($config as $option) {
+            $record->settings()->updateOrCreate([
+                'key' => $option['name'],
+                'settingable_id' => $record->id,
+                'settingable_type' => $record->getMorphClass(),
+            ], [
+                'type' => $option['database_type'] ?? 'string',
+                'value' => isset($data['settings'][$option['name']]) ? (is_array($data['settings'][$option['name']]) ? json_encode($data['settings'][$option['name']]) : $data['settings'][$option['name']]) : null,
+                'encrypted' => $option['encrypted'] ?? false,
+            ]);
+        }
+
+        ExtensionHelper::call($record, 'enabled', [$record], mayFail: true);
+
+        return $record;
+    }
+}
